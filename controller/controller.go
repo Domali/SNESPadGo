@@ -2,11 +2,12 @@ package controller
 
 import (
 	"fmt"
-	"github.com/faiface/pixel"
-	"github.com/faiface/pixel/pixelgl"
 	"image"
 	_ "image/png"
 	"os"
+
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 )
 
 type Button struct {
@@ -66,12 +67,13 @@ func NewController() Controller {
 
 func (c *Controller) generateButtonVectors() {
 	for i, v := range c.Buttons {
-		// Since sprite locations have there (0,0) location be the center of the image we need to adjust
-		// from the center size of the image.
+		// Sprite locations have their anchor location as the center of the image. Our assumption
+		// is that the anchor of the image is the top left corner so we need to make adjustments
+		// to the location of the sprite.
 		vs := v.Sprite.Picture().Bounds().Center()
 
 		// Our image Y assume that 0 starts at the top of the image. Unfortunately the library has
-		// 0 starting at the bottom. Here we do some math so the add function correctly subtracts
+		// 0 starting at the bottom. Here we do some math so that the add function correctly subtracts
 		// the value in va. We also subtract our Y location from the Y size of the canvas so we can
 		// start at the top value and subtract from there.
 		vs.Y = vs.Y * -1
@@ -95,6 +97,7 @@ func loadSprite(path string) (*pixel.Sprite, error) {
 	return sprite, nil
 }
 
+// This caches all the images into the controller struct as pixel.Sprite
 func (c *Controller) initializeImages(controller Controller) error {
 	var err error
 	c.Sprite, err = loadSprite(controller.ImageFilePath)
@@ -105,7 +108,7 @@ func (c *Controller) initializeImages(controller Controller) error {
 	for i, v := range c.Buttons {
 		c.Buttons[i].Sprite, err = loadSprite(v.ImageFilePath)
 		if err != nil {
-			fmt.Println("Failed to load image for %v button.", v.Name)
+			fmt.Printf("Failed to load image for %v button.\n", v.Name)
 			return err
 		}
 	}

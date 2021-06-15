@@ -6,9 +6,6 @@ static int dataPin = 6;//red
 static int latchPin = 4;//yellow
 static int clockPin = 2;//blue
 
-//The state that the color is currently in
-int state;
-
 void setup() {
    Serial.begin(57600);
    pinMode(dataPin, INPUT_PULLUP);
